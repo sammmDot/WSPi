@@ -1,4 +1,3 @@
 ### Ejemplo de casos de uso API
-
-## Desafios
-- ¿WEB Sockets o API Rest?
+- ¿Que es una API?
+- ¿Web Socket o API Rest?
