@@ -1,3 +1,2 @@
-### Ejemplo de casos de uso API
-- ¿Que es una API?
-- ¿Web Socket o API Rest?
+# API Examples
+Bienvenido a la carpeta de ejemplos para casos de usos de la API de Binance.
