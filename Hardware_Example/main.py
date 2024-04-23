@@ -1,9 +1,3 @@
-"""
-OLED with MicroPython: Raspberry Pi Pico  and ESP8266
-By: Sergio Andres Castaño Giraldo
-site: https://controlautomaticoeducacion.com/micropython/
-GitHub: https://github.com/sergioacg/MicroPython
-
 Useful links:
 # https://docs.micropython.org/en/latest/library/framebuf.html
 # https://micropython-workshop.readthedocs.io/en/latest/pages/shields/oled.html
@@ -18,10 +12,6 @@ from images import (logo)
 
 
 def plot_time(yp, t, x, y, var = [0.0,3.3], vpts=[25, 16, 40], hpts = [25, 55, 112]):
-    """"
-    Graph function of the Cartesian plane in relation to time:
-    by: Sergio Andres Castaño Giraldo
-    
     plot_time(yp, t, x, y, var = [0.0,3.3], vpts=[25, 16, 40], hpts = [25, 55, 112]):
 
     yp: dependent variable
