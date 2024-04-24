@@ -1,9 +1,3 @@
-Useful links:
-# https://docs.micropython.org/en/latest/library/framebuf.html
-# https://micropython-workshop.readthedocs.io/en/latest/pages/shields/oled.html
-# http://javl.github.io/image2cpp/
-"""
-
 from machine import Pin, I2C, ADC
 from utime import sleep_ms
 from ssd1306 import SSD1306_I2C
