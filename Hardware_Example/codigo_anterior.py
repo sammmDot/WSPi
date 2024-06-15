@@ -1,30 +1,27 @@
-import network  # Para gestionar la conexión a la red
-import gc       # Para recolección de basura
-import urequests as requests   # Para realizar solicitudes HTTP
-import framebuf                # Para trabajar con imágenes
-import json                    # Manipular archivos Json
-import ssd1306  # Controla el display oled
-import machine    # Configuración de pines y comunicación i2c
-from time import sleep           # Manejar tiempos
+import machine
+import ssd1306
 import utime
+import framebuf
+import network
 import _thread
 import socket
+import time
 import struct
+from imagen_bitcoin import (logo)
+ANCHO = 128
+ALTO = 64
 
-# Limpiar la memoria
-gc.collect()
+print("Inicializando I2C")
+i2c = machine.I2C(1, scl=machine.Pin(19), sda=machine.Pin(18))
 
-SSID = 'VTR-8135116'            # Nombre de la red WiFi
-PASSWORD = 'y8yfQcpvgbmf'    # Contraseña de la red WiFi
+print("Inicializando pantalla OLED")
+oled = ssd1306.SSD1306_I2C(ANCHO, ALTO, i2c)
+oled.fill(1)
+oled.show()
+utime.sleep(1)
+oled.fill(0)
+oled.show()
 
-# URL de la API que estás utilizando
-URL_BASE = "https://api.coingecko.com/api/v3"
-
-# Tu clave API
-API_KEY = "CG-jRDMyKai9Nnq6kBp9khhgSrd"
-
-NTP_DELTA = 2208988800 + (3600 * 4)  # GMT-4 Santiago de Chile
-host = "pool.ntp.org"
 button_pin_1 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
 button_pin_2 = machine.Pin(15, machine.Pin.IN, machine.Pin.PULL_DOWN)
 button_pin_3 = machine.Pin(16, machine.Pin.IN, machine.Pin.PULL_DOWN)
@@ -44,14 +41,14 @@ last_button_state_2 = 0
 last_button_state_3 = 0
 last_button_state_4 = 0
 
-coin_info = {"coins": ["bitcoin", "ethereum","cardano"],
-             "coin_vs": "usd",
-             "include_market_cap": False,
-             "include_24hr_change": True,
-             "include_24hr_vol": False,
-             }
+ssid = 'VTR-8135116'
+password = 'y8yfQcpvgbmf'
+
+NTP_DELTA = 2208988800 + (3600 * 4)  # GMT-4 Santiago de Chile
+host = "pool.ntp.org"
 
 def set_time():
+    print("Configurando hora NTP")
     NTP_QUERY = bytearray(48)
     NTP_QUERY[0] = 0x1B
     addr = socket.getaddrinfo(host, 123)[0][-1]
@@ -69,6 +66,17 @@ def set_time():
         (tm[0], tm[1], tm[2], tm[6] + 1, tm[3], tm[4], tm[5], 0))
     print("Hora configurada: ", machine.RTC().datetime())
 
+def connect():
+    print("Conectando a WiFi")
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(ssid, password)
+    while not wlan.isconnected():
+        utime.sleep(1)
+        print("Esperando conexión WiFi...")
+    print("Conectado a WiFi: ", wlan.ifconfig())
+    set_time()
+
 def Icono_WIFI(ruta, x, y):
     print("Cargando icono desde archivo:", ruta)
     doc = open(ruta, "rb")
@@ -81,6 +89,7 @@ def Icono_WIFI(ruta, x, y):
     return framebuf.FrameBuffer(icono, x_size, y_size, framebuf.MONO_HLSB)
 
 def obtener_fecha():
+    print("Obteniendo fecha y hora actual")
     rtc = machine.RTC()
     tm = rtc.datetime()
     year = tm[0]
@@ -92,9 +101,11 @@ def obtener_fecha():
     fecha_actual = "{:02}:{:02}      {:02d}/{:02d}".format(hour, minute, day, month)
     oled.fill_rect(0, 0, 128, 8, 0)  
     oled.text(fecha_actual, 0, 0)
+    print("Fecha y hora obtenida:", fecha_actual)
     return fecha_actual
 
 def imprimir_pantalla(fecha_actual, texto_linea_1="", texto_linea_2="", texto_linea_3="", texto_linea_4="", mostrar_logo=False):
+    print("Imprimiendo pantalla")
     oled.fill(0)
     if mostrar_logo:
         oled.blit(fb, 0, 0)  # Ajusta la posición según sea necesario
@@ -106,141 +117,32 @@ def imprimir_pantalla(fecha_actual, texto_linea_1="", texto_linea_2="", texto_li
         oled.text(texto_linea_3, int((ANCHO - len(texto_linea_3) * 8) / 2), int((ALTO - 32) / 2) + 24)
         oled.text(texto_linea_4, int((ANCHO - len(texto_linea_3) * 8) / 2), int((ALTO - 32) / 2) + 36)
     oled.show()
-
-def mostrar_icono_wifi():
-    wlan = network.WLAN(network.STA_IF)
-    if not wlan.isconnected():
-        icono = Icono_WIFI("sin-senal.pbm", 56, 112)
-    else:
-        icono = Icono_WIFI("wifii.pbm", 56, 112)
-    oled.blit(icono, 56, 0)
-    oled.show()
-
     
-def connectWifi(oled, ssid, password, timeout=15):
-    station = network.WLAN(network.STA_IF)
-    station.active(True)
-    station.connect(ssid, password)
-
-    oled.fill(0)
-    oled.show()
-
-    oled.text("Conectando", 10, 0)
-    oled.show()
-    dot = 10
-
-    timeout_connect = 0
-
-    while not station.isconnected():
-        print('conectando')
-
-        oled.text(".", dot, 20)
-        oled.show()
-        sleep(1)
-
-        timeout_connect += 1
-        dot += 6
-
-        if timeout_connect >= timeout:
-            oled.fill(0)
-            oled.text("No se pudo", 10, 20)
-            oled.text(f"conectar a {ssid}", 10, 30)
-            oled.show()
-
-            raise Exception(f"No se pudo conectar a {ssid}")
-
-    print(f'Conexión exitosa a {ssid}')
-
-    oled.fill(0)
-    oled.text("Conectado", 10, 0)
-    oled.show()
-
-
-def fetch_api_simple_price(url_base: str, api_key: str, coin_info_list: dict, timeout=15):
-    headers = {"Content-Type": "application/json", "Authorization": "Bearer " + api_key}
-    url = url_base + "/simple/price?ids="
-    for index, coin in enumerate(coin_info_list['coins']):
-        if index == 0:
-            url += coin.lower()
-        else:
-            url += f'%2C{coin.lower()}'
-    url += f'&vs_currencies={coin_info_list["coin_vs"].lower()}'
-    parameters = coin_info_list.items()
-    for key, value in parameters:
-        if isinstance(value, bool):
-            if value:
-                url += f'&{key}={str(value).lower()}'
-    try:
-        response = requests.get(url, headers=headers, timeout=timeout)
-        if response.status_code == 200:
-            return json.loads(response.text)
-        else:
-            print('Error en la solicitud. Código de respuesta HTTP:', response.status_code)
-            return None
-    except Exception as e:
-        print('Error en la solicitud:', str(e))
-        return None
-
-
-
-def infoIcon(icon_id):
-    with open(f'icons/{icon_id}.pbm', "rb") as file:
-        file.readline()
-        xy = file.readline()
-        x = int(xy.split()[0])
-        y = int(xy.split()[1])
-        icon = bytearray(file.read())
-        icon_array = framebuf.FrameBuffer(icon, x, y, framebuf.MONO_HLSB)
-    return [x, y, icon_array]
-
-
-
-def showInOled(oled, data_coins, coin_search, vs_coin):
-    info_coin = data_coins[coin_search]
-    icon_data = infoIcon(coin_search)
-    valor = info_coin[vs_coin]
-    if valor < 100:
-        valor = f'{valor:0.2f}'
-    change_24h = info_coin[f'{vs_coin}_24h_change']
-    change_24h = f'{change_24h:0.2f}'
-    def center_coin_name(name_coin, x_icon_pos):
-        x = (oled.width + icon_data[0] + x_icon_pos - len(name_coin)*8)//2
-        y = (icon_data[1]//2)+2
-        name = name_coin.upper()
-        oled.text(name, x, y)
-        oled.hline(x, y+9, len(name_coin)*8, 1)
-    def centerText(text, y):
-        x = (oled.width - len(text)*8)//2
-        oled.text(text, x, y)
-    oled.fill(0)
-    oled.blit(icon_data[2], 10, 5)
-    center_coin_name(coin_search, 8)
-    centerText(f'{valor} {vs_coin}', icon_data[1]+8)
-    centerText(f'{change_24h} %', icon_data[1]+20)
-    oled.show()
-
-
-
-def showUpdate2(oled):
-    oled.fill(0)
-    oled.text("Consultando", 5, 30)
-    oled.show()
-
 def toggle_screen_state(screen):
     global current_screen
     print("Cambiando estado de la pantalla a:", screen)
-    if screen == SCREEN_ON_1:
+
+    if screen == SCREEN_OFF:
+        current_screen = SCREEN_OFF
+        oled.poweroff()
+        oled.fill(0)
+        oled.show()
+        
+    elif screen == SCREEN_ON_1:
         current_screen = SCREEN_ON_1
         fecha_actual = obtener_fecha()
         imprimir_pantalla(fecha_actual, "WSPI", "Ingenieria Civil", "Telematica")
+        
     elif screen == SCREEN_ON_2:
         current_screen = SCREEN_ON_2
         fecha_actual = obtener_fecha()
-        imprimir_pantalla(fecha_actual)
+        imprimir_pantalla(fecha_actual, "Certamenes:", "MAT070    18/06", "FIS100    16/06", "MAT060    21/06")
+        
     elif screen == SCREEN_ON_3:
         current_screen = SCREEN_ON_3
         fecha_actual = obtener_fecha()
-        imprimir_pantalla(fecha_actual)
+        imprimir_pantalla(fecha_actual, "PROXIMA CLASE", "IWG101", "PC08")
+        
     elif screen == SCREEN_ON_4:
         current_screen = SCREEN_ON_4
         fecha_actual = obtener_fecha()
@@ -251,30 +153,27 @@ def toggle_screen_state(screen):
         oled.text(fecha_actual, 0, 0)
         mostrar_icono_wifi()
         oled.show()
+        
     elif screen == SCREEN_ON_5:
         current_screen = SCREEN_ON_5
         fecha_actual = obtener_fecha()
-        imprimir_pantalla(fecha_actual)
+        imprimir_pantalla(fecha_actual, "Controles:", "MAT070    26/06", "TEL101    28/06", "FIS100    20/06")
+        
     elif screen == SCREEN_ON_6:
         current_screen = SCREEN_ON_6
         fecha_actual = obtener_fecha()
-        imprimir_pantalla(fecha_actual)
+        imprimir_pantalla(fecha_actual, mostrar_logo=True)
 
-
-# Configura oled ssd1306 en puerto I2C 0
-ANCHO = 128
-ALTO = 64
-i2c = machine.I2C(1, scl=machine.Pin(19), sda=machine.Pin(18))
-oled = ssd1306.SSD1306_I2C(ANCHO,ALTO, i2c)
-# Conectar a la red WiFi
-connectWifi(oled, SSID, PASSWORD)
-
-showUpdate2(oled)
-
-data = fetch_api_simple_price(URL_BASE, API_KEY, coin_info)
-
-# Imprimir la respuesta
-print(data)
+        
+def mostrar_icono_wifi():
+    print("Mostrando icono WiFi")
+    wlan = network.WLAN(network.STA_IF)
+    if not wlan.isconnected():
+        icono = Icono_WIFI("sin-senal.pbm", 56, 112)
+    else:
+        icono = Icono_WIFI("wifii.pbm", 56, 112)
+    oled.blit(icono, 56, 0)
+    oled.show()
 
 def Main():
     print("Iniciando bucle principal")
@@ -291,7 +190,8 @@ def Main():
         button_state_1 = button_pin_1.value()
 
         if button_state_1 != last_button_state_1 and button_state_1 == 1:
-            toggle_screen_state(SCREEN_ON_1)  # Pasar la instancia de la pantalla OLED como argumento
+            toggle_screen_state(SCREEN_ON_1)
+
         last_button_state_1 = button_state_1
 
         button_state_2 = button_pin_2.value()
@@ -301,8 +201,6 @@ def Main():
                 toggle_screen_state(SCREEN_ON_5)
             else:
                 toggle_screen_state(SCREEN_ON_2)
-                showInOled(oled, data, "bitcoin", coin_info["coin_vs"])
-
 
         last_button_state_2 = button_state_2
 
@@ -313,13 +211,9 @@ def Main():
         if button_state_4 != last_button_state_4 and button_state_4 == 1:
             print("Botón 4 presionado")
             toggle_screen_state(SCREEN_ON_6)
-            showInOled(oled, data, "cardano", coin_info["coin_vs"])
-
 
         if button_state_3 != last_button_state_3 and button_state_3 == 1:
             toggle_screen_state(SCREEN_ON_3)
-            showInOled(oled, data, "ethereum", coin_info["coin_vs"])
-
 
         last_button_state_3 = button_state_3
 
@@ -336,4 +230,6 @@ def Main():
         utime.sleep(0.1)
 
         
+print("Iniciando hilo principal")
 _thread.start_new_thread(Main, ())
+connect()
