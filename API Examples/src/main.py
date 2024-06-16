@@ -1,6 +1,8 @@
 from NetworkSettings import ConnectNetwork
-from BinanceTest import TestConnectivity as Ping
 from env import SSID, PASSWORD
+from Ticker import PriceBTC, Variation24Hrs, Variation7Day
 
 ConnectNetwork(SSID, PASSWORD)
-Ping()
+PriceBTC()
+Variation24Hrs()
+Variation7Day()
