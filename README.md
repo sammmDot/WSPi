@@ -9,6 +9,8 @@
 + Agustin Garcia
 > 202430019-9 (Team Hardware)
 
+## Links de trabajo
+
 [¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/La-visión)
 
 [¿Qué necesitamos para cumplir con lo básico?](https://github.com/sammmDot/WSPi/Requisitos)
