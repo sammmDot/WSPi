@@ -1,9 +1,13 @@
 # Proyecto WSPi
 ## Integrantes
-+ Tulio Barría Águila 202430036-9
-+ Mitchell Rojas 202330010-1
-+ Ximena Espinoza 2024
-+ Agustin Garcia 202430019-9
++ Tulio Barría Águila
+> 202430036-9 (Team Hardware)
++ Mitchell Rojas
+> 202330010-1 (Team API)
++ Ximena Espinoza
+> 2024 (Team API)
++ Agustin Garcia
+> 202430019-9 (Team Hardware)
 
 [¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/La-visión)
 
