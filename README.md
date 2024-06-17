@@ -5,4 +5,4 @@
 + Ximena Espinoza 2024
 + Agustin Garcia 202430019-9
 
-[¿Cuál fue nuestro enfoque?](
+[¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/La-visión)
