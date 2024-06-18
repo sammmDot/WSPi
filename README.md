@@ -13,8 +13,8 @@
 
 [¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/wiki/La-visi%C3%B3n)
 
-[¿Qué necesitamos para cumplir con lo básico?](https://github.com/sammmDot/WSPi/Requisitos)
+[¿Qué necesitamos para cumplir con lo básico?](https://github.com/sammmDot/WSPi/wiki/Requisitos)
 
-[El plan de trabajo](https://github.com/sammmDot/WSPi/Plan)
+[El plan de trabajo](https://github.com/sammmDot/WSPi/wiki/Pasos-a-seguir)
 
 [Escritura básica de GitHub](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
