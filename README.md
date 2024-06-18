@@ -11,7 +11,7 @@
 
 ## Links de trabajo
 
-[¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/La-visión)
+[¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/wiki/La-visi%C3%B3n)
 
 [¿Qué necesitamos para cumplir con lo básico?](https://github.com/sammmDot/WSPi/Requisitos)
 
