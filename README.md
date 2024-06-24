@@ -42,10 +42,10 @@ Con esto, tendríamos lista una base para iniciar el trabajo real, sin embargo t
 
 ## Links de trabajo
 
-[¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/wiki/La-visi%C3%B3n)
+[Nuestra Visión de trabajo](https://github.com/sammmDot/WSPi/wiki/La-visi%C3%B3n)
 
 [El aspecto más importante, la API](https://github.com/sammmDot/WSPi/wiki/Datos-sobre-API)
 
-[El plan de trabajo](https://github.com/sammmDot/WSPi/wiki/Pasos-a-seguir)
+[Los pasos del proceso](https://github.com/sammmDot/WSPi/wiki/Pasos-a-seguir)
 
 [Escritura básica de GitHub](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
