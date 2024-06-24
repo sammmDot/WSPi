@@ -44,7 +44,7 @@ Con esto, tendríamos lista una base para iniciar el trabajo real, sin embargo t
 
 [¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/wiki/La-visi%C3%B3n)
 
-[¿Qué necesitamos para cumplir con lo básico?](https://github.com/sammmDot/WSPi/wiki/Requisitos)
+[¿Qué necesitamos para cumplir con lo básico?](https://github.com/sammmDot/WSPi/wiki/Datos-sobre-API)
 
 [El plan de trabajo](https://github.com/sammmDot/WSPi/wiki/Pasos-a-seguir)
 
