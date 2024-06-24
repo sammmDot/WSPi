@@ -22,6 +22,24 @@ Para esto, adquirimos los siguientes componentes:
 
 La idea inicial, y la base del proyecto, era un dispositivo para invertir en la bolsa que pudieras cargar en tu bolsillo, para ahorrar tiempo importante a la hora de utilizar tu dinero en el mercado de las monedas virtuales.
 
+## Primer proceso
+
+Como se explicó anteriormente, necesitábamos una placa RaspBerry Pi pico W, una pantalla, botones, resistencias y potenciómetros, sin embargo tener los componentes físicamente no aseguraría que el proyecto estuviera listo, por lo que nos planteamos lo siguiente:
+
+> [!IMPORTANT]
+> + Encender la pantalla y conectarla a la placa.
+> + Comprobar que los botones funcionan bien.
+> + Poder mostrar un gráfico en pantalla.
+> + Estudiar el comportamiento de los gráficos de la bolsa.
+> + Aprender a trabajar con una API.
+
+Con esto, tendríamos lista una base para iniciar el trabajo real, sin embargo tampoco nos podemos olvidar de otros aspectos que, si bien no influyen realmente en el funcionamiento, son funciones que podrían hacer el trabajo más agradable, estos aspectos son:
+
+> [!NOTE]
+> + Configurar una interfaz para la pantalla.
+> + Escoger una moneda virtual a trabajar (Buda).
+
+
 ## Links de trabajo
 
 [¿Cuál fue nuestro enfoque?](https://github.com/sammmDot/WSPi/wiki/La-visi%C3%B3n)
