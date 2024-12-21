@@ -1,3 +1,5 @@
+> ⚠️ Warning: Este fue nuestro primer proyecto en el que nos acercamos a la creacion de un producto y al desarollo de aplicaciones en equipo, el codigo entonces no cumple con estandares de buenas practicas y es posible que falle
+
 # Proyecto WSPi
 ## Integrantes
 + Tulio Barría Águila
